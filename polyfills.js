@@ -36,7 +36,6 @@
 
   // Create list of the features this browser needs to be polyfilled
   var features = [];
-  ('Promise' in w) || features.push('Promise');
   ('IntersectionObserver' in w) || features.push('IntersectionObserver');
 
   if (features.length) {
