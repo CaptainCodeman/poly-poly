@@ -73,7 +73,7 @@ patched the browser features before our elements try to use them. So how do we m
 they have to?
 
 The implementation I have come up with has two parts to it. The polyfill loading itself is done
-in the [polyfills.js](./blob/master/polyfills.js) which contains the WebComponents polyfill loading
+in the [polyfills.js](./polyfills.js) which contains the WebComponents polyfill loading
 that we are familiar with as well as whatever additional polyfills are needed via feature detection
 and the [polyfill.io service](https://polyfill.io/v2/docs/). This script can be loaded asynchronously
 or included in the main `index.html` page. Any polyfills it requests are also loaded asynchronously.
@@ -84,7 +84,7 @@ they are loaded before the element then the callback is short-circuited to execu
 They also trigger if no polyfills are required for the browser being used.
 
 An example of the callback being used to delay initializing an element until the required feature
-is available is shown in [lazy-img.html](./blob/master/lazy-img.html). Note that this makes use of
+is available is shown in [lazy-img.html](./lazy-img.html). Note that this makes use of
 the [Class-style constructor](https://www.polymer-project.org/1.0/docs/devguide/registering-elements#element-constructor)
 to delay upgrading the element until the callback notification.
 
