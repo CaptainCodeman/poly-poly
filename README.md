@@ -72,6 +72,13 @@ If the elements and polyfills are loaded async, there is no guarantee that the p
 patched the browser features before our elements try to use them. So how do we make them wait if
 they have to?
 
+In some ways, this is more of a challenge with Polymer and WebComponents because they are so "native".
+With many othewr frameworks there is a much clearer point where the app is loaded and initialized.
+But if you have native support for WebComponents - well, they start as soon as the link causes them
+to be loaded.
+
+So I tried to come up with a solution ...
+
 The implementation I have come up with has two parts to it. The polyfill loading itself is done
 in the [polyfills.js](./polyfills.js) which contains the WebComponents polyfill loading
 that we are familiar with as well as whatever additional polyfills are needed via feature detection
