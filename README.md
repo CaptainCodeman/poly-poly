@@ -104,15 +104,6 @@ scripts.
 A browser without native support will make a request to load the ~20Kb polyfill required but will
 otherwise work as normal.
 
-## Drawbacks
-
-The biggest drawback to me is the complexity it introduces and the coupling between the app-level
-script and the element. It would be nice if there were some less-direct notification hook that could
-be used via Polymer itself (maybe there is - I hope someone tells me!).
-
-I think it would also be a bit nicer to use a promise to delay the element initialization ... but
-then promises might need to be polyfilled!
-
 ## Final Thoughts
 
 The idea scenario would be for as much of this to be automated and built in to tooling as
