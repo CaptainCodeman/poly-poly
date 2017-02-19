@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="poly-poly.html">
 
 <!--
 `lazy-img`
@@ -34,8 +35,15 @@ Lazy loading img element, delays loading images until they come into the viewpor
     (function() {
       'use strict';
 
-      var observer;
-      var el = Polymer.Class({
+      var observerPromise = window.PolyPoly.ready.then(function() {
+        return new IntersectionObserver(function(entries){
+          for(var i = 0; i < entries.length; i++) {
+            entries[i].target._load();
+          }
+        });
+      });
+
+      Polymer({
         is: 'lazy-img',
 
         properties: {
@@ -56,6 +64,9 @@ Lazy loading img element, delays loading images until they come into the viewpor
             img.classList.add('loaded');
           };
           img.src = this._resolveSrc(this.src);
+
+          // stop observing
+          this.detached();
         },
 
         _resolveSrc: function(testSrc) {
@@ -64,24 +75,16 @@ Lazy loading img element, delays loading images until they come into the viewpor
         },
 
         attached: function() {
-          observer.observe(this);
+          observerPromise.then(function(observer) {
+            observer.observe(this);
+          }.bind(this));
         },
 
         detached: function() {
-          observer.unobserve(this);
-        },
-      });
-
-      window.PolyfillCallbacks = window.PolyfillCallbacks || [];
-      window.PolyfillCallbacks.push(function() {
-        observer = new IntersectionObserver(function(entries){
-          for(var i = 0; i < entries.length; i++) {
-            var el = entries[i].target;
-            el._load();
-            observer.unobserve(el);
-          }
-        });
-        document.registerElement('lazy-img', el);
+          observerPromise.then(function(observer) {
+            observer.unobserve(this);
+          }.bind(this));
+        }
       });
     })();
   </script>

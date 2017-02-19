@@ -81,21 +81,21 @@ to be loaded.
 
 So I tried to come up with a solution ...
 
-The implementation I have come up with has two parts to it. The polyfill loading itself is done
-in the [polyfills.js](./polyfills.js) which contains the WebComponents polyfill loading
-that we are familiar with as well as whatever additional polyfills are needed via feature detection
-and the [polyfill.io service](https://polyfill.io/v2/docs/). This script can be loaded asynchronously
-or included in the main `index.html` page. Any polyfills it requests are also loaded asynchronously.
+Any element that requires polyfills should inludes a dependency on the [poly-poly.html](./poly-poly.html)
+element. This generates a request to the [polyfill.io service](https://polyfill.io/v2/docs/) to load
+whatever polyfills have been listed in the `window.PolyPoly` global array. This array should be set
+based on feature detection in the apps `index.html` page.
 
-The key part is the `PolyfillCallbacks` array added to the global window object. This allows any
-element to register a callback to receive a notification when the polyfills have been loaded. If
-they are loaded before the element then the callback is short-circuited to execute immediately.
-They also trigger if no polyfills are required for the browser being used.
+This will delay triggering any polyfill loading until an element that requires it is itself
+loaded which should make the system lazy-loading / PRPL pattern friendly. i.e. if only certain pages
+of an app need polyfilled features then the polyfills do not need to be loaded unless and until those
+pages are.
 
-An example of the callback being used to delay initializing an element until the required feature
-is available is shown in [lazy-img.html](./lazy-img.html). Note that this makes use of
-the [Class-style constructor](https://www.polymer-project.org/1.0/docs/devguide/registering-elements#element-constructor)
-to delay upgrading the element until the callback notification.
+The `poly-poly` element provides a promise that the calling element can use to delay any operations 
+until the polyfilled features are available.
+
+An example of the promise being used to delay functionality of an element until the required feature
+is available is shown in [lazy-img.html](./lazy-img.html).
 
 The demo shows lazy loading images using [IntersectionObserver](https://developers.google.com/web/updates/2016/04/intersectionobserver)
 which at the time of writing is only supported natively in Google Chrome and requires no additional
