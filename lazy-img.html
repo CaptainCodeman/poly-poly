@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="poly-poly.html">
 
 <!--
 `lazy-img`
@@ -34,54 +35,56 @@ Lazy loading img element, delays loading images until they come into the viewpor
     (function() {
       'use strict';
 
-      var observer;
-      var el = Polymer.Class({
-        is: 'lazy-img',
+      // We need the IntersectionObserver outside of the element so we
+      // wrap and delay the entire definition based on the promise ...
+      window.PolyPoly.ready.then(function() {
 
-        properties: {
-          /** The source URL for the image */
-          src: {
-            type: String
-          },
-
-          /** The alt attribute for the image */
-          alt: {
-            type: String
-          }
-        },
-
-        _load: function() {
-          var img = this.$.img;
-          img.onload = function() {
-            img.classList.add('loaded');
-          };
-          img.src = this._resolveSrc(this.src);
-        },
-
-        _resolveSrc: function(testSrc) {
-          var baseURI = /** @type {string} */(this.ownerDocument.baseURI);
-          return (new URL(Polymer.ResolveUrl.resolveUrl(testSrc, baseURI), baseURI)).href;
-        },
-
-        attached: function() {
-          observer.observe(this);
-        },
-
-        detached: function() {
-          observer.unobserve(this);
-        },
-      });
-
-      window.PolyfillCallbacks = window.PolyfillCallbacks || [];
-      window.PolyfillCallbacks.push(function() {
-        observer = new IntersectionObserver(function(entries){
+        var observer = new IntersectionObserver(function(entries){
           for(var i = 0; i < entries.length; i++) {
-            var el = entries[i].target;
-            el._load();
-            observer.unobserve(el);
+            entries[i].target._load();
           }
         });
-        document.registerElement('lazy-img', el);
+
+        Polymer({
+          is: 'lazy-img',
+
+          properties: {
+            /** The source URL for the image */
+            src: {
+              type: String
+            },
+
+            /** The alt attribute for the image */
+            alt: {
+              type: String
+            }
+          },
+
+          _load: function() {
+            var img = this.$.img;
+            img.onload = function() {
+              img.classList.add('loaded');
+            };
+            img.src = this._resolveSrc(this.src);
+
+            // stop observing
+            observer.unobserve(this);
+          },
+
+          _resolveSrc: function(testSrc) {
+            var baseURI = /** @type {string} */(this.ownerDocument.baseURI);
+            return (new URL(Polymer.ResolveUrl.resolveUrl(testSrc, baseURI), baseURI)).href;
+          },
+
+          attached: function() {
+            observer.observe(this);
+          },
+
+          detached: function() {
+            observer.unobserve(this);
+          }
+        });
+
       });
     })();
   </script>

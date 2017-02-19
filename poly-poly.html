@@ -1,0 +1,27 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../promise-polyfill/promise-polyfill-lite.html">
+
+<script>
+  (function() {
+    'use strict';
+
+    window.PolyPoly = window.PolyPoly || [];
+    window.PolyPoly.ready = new Promise(function(resolve, reject) {
+      if (window.PolyPoly.length) {
+        // Include a `ua` argument set to a supported browser to skip UA identification
+        // (improves response time) and avoid being treated as unknown UA (which would
+        // otherwise result in no polyfills, even with `always`, if UA is unknown)
+        var url = 'https://polyfill.io/v2/polyfill.min.js?features=' + window.PolyPoly.join(',') + '&flags=gated,always&ua=chrome/50';
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = url;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      } else {
+        resolve();
+      }
+    });
+
+  })();
+</script>
