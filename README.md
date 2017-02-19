@@ -48,6 +48,8 @@ which could be undesirable. We're also still left with the polyfill versioning a
 
 Bundling polyfills with our element goes against [fundamental polyfill best practices](https://w3ctag.github.io/polyfills/)
 
+There's also some similarities to [The Problem With Using HTML Imports for Dependency Management](https://www.tjvantoll.com/2014/08/12/the-problem-with-using-html-imports-for-dependency-management/)
+
 ## Use a Polyfill Service
 
 The ideal solution to polyfill loading is to use a [polyfill service](https://polyfill.io/v2/docs/).
@@ -73,7 +75,7 @@ patched the browser features before our elements try to use them. So how do we m
 they have to?
 
 In some ways, this is more of a challenge with Polymer and WebComponents because they are so "native".
-With many othewr frameworks there is a much clearer point where the app is loaded and initialized.
+With many other frameworks there is a much clearer point where the app is loaded and initialized.
 But if you have native support for WebComponents - well, they start as soon as the link causes them
 to be loaded.
 
