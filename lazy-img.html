@@ -35,56 +35,56 @@ Lazy loading img element, delays loading images until they come into the viewpor
     (function() {
       'use strict';
 
-      var observerPromise = window.PolyPoly.ready.then(function() {
-        return new IntersectionObserver(function(entries){
+      // We need the IntersectionObserver outside of the element so we
+      // wrap and delay the entire definition based on the promise ...
+      window.PolyPoly.ready.then(function() {
+
+        var observer = new IntersectionObserver(function(entries){
           for(var i = 0; i < entries.length; i++) {
             entries[i].target._load();
           }
         });
-      });
 
-      Polymer({
-        is: 'lazy-img',
+        Polymer({
+          is: 'lazy-img',
 
-        properties: {
-          /** The source URL for the image */
-          src: {
-            type: String
+          properties: {
+            /** The source URL for the image */
+            src: {
+              type: String
+            },
+
+            /** The alt attribute for the image */
+            alt: {
+              type: String
+            }
           },
 
-          /** The alt attribute for the image */
-          alt: {
-            type: String
-          }
-        },
+          _load: function() {
+            var img = this.$.img;
+            img.onload = function() {
+              img.classList.add('loaded');
+            };
+            img.src = this._resolveSrc(this.src);
 
-        _load: function() {
-          var img = this.$.img;
-          img.onload = function() {
-            img.classList.add('loaded');
-          };
-          img.src = this._resolveSrc(this.src);
-
-          // stop observing
-          this.detached();
-        },
-
-        _resolveSrc: function(testSrc) {
-          var baseURI = /** @type {string} */(this.ownerDocument.baseURI);
-          return (new URL(Polymer.ResolveUrl.resolveUrl(testSrc, baseURI), baseURI)).href;
-        },
-
-        attached: function() {
-          observerPromise.then(function(observer) {
-            observer.observe(this);
-          }.bind(this));
-        },
-
-        detached: function() {
-          observerPromise.then(function(observer) {
+            // stop observing
             observer.unobserve(this);
-          }.bind(this));
-        }
+          },
+
+          _resolveSrc: function(testSrc) {
+            var baseURI = /** @type {string} */(this.ownerDocument.baseURI);
+            return (new URL(Polymer.ResolveUrl.resolveUrl(testSrc, baseURI), baseURI)).href;
+          },
+
+          attached: function() {
+            observer.observe(this);
+          },
+
+          detached: function() {
+            observer.unobserve(this);
+          }
+        });
+
       });
     })();
   </script>
