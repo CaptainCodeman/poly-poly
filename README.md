@@ -97,9 +97,11 @@ of an app need polyfilled features then the polyfills do not need to be loaded u
 pages are.
 
 The `poly-poly` element provides a promise that the calling element can use to delay any operations 
-until the polyfilled features are available.
+until the polyfilled features are available. Actually, it's not a real `Promise` - I didn't want to
+load the promise-polyfill that would load regardless of the browsers existing support (which is the
+whole point of this element) so it's Promise-_like_ ... just enough to provide a `.then()` callback.
 
-An example of the promise being used to delay functionality of an element until the required feature
+An example of the "promise" being used to delay functionality of an element until the required feature
 is available is shown in [lazy-img](https://github.com/CaptainCodeman/lazy-img) which requires the
 newer [IntersectionObserver](https://developers.google.com/web/updates/2016/04/intersectionobserver)
 which at the time of writing is only supported natively in Google Chrome.
