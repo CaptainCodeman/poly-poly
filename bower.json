@@ -1,6 +1,6 @@
 {
   "name": "poly-poly",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Polymer Polyfill Service Example",
   "authors": [
     "Simon Green <simon@captaincodeman.com>"
