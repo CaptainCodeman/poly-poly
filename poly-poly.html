@@ -64,8 +64,8 @@
             loadedPromise.resolve();
           }
         } else {
-          console.log("window.PolyPoly.features not defined - you may be using an element that requires polyfills");
-          loadedPromise.reject();
+          console.log("window.PolyPoly.features not defined - you might be using an element that requires polyfills");
+          loadedPromise.resolve();
         }
       }
     }
